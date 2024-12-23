@@ -3,7 +3,7 @@
 import { WechatyBuilder, ScanStatus, Message, Contact } from "wechaty";
 import qrcodeTerminal from "qrcode-terminal";
 import SolMessage from "../gmgn/sol/SolMessage";
-
+import { args } from "../../args";
 
 function onScan(qrcode: string, status: number) {
   if (status === ScanStatus.Waiting || status === ScanStatus.Timeout) {
@@ -39,19 +39,18 @@ async function onMessage(msg: Message) {
   if (msg.text() === "ding") {
     await msg.say("dong");
   }
-  // let text = msg.text();
-  // try {
-  //   let replyText = await handleSolanaMessage(text);
-  //   if (replyText) {
-  //     await msg.say(replyText);
-  //     // db.addQueryCount(text);
-  //   }
-  // } catch (error) {
-  //   console.log(error);
-  // }
+  let text = msg.text();
+  try {
+    let replyText = await SolMessage.handleSolanaMessage(text);
+    if (replyText) {
+      await msg.say(replyText);
+    }
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-function main() {
+function startWechatBot(param = {} as any) {
   const wechaty = WechatyBuilder.build({
     name: "wechat-dex-bot",
   }); // get a Wechaty instance
@@ -63,6 +62,6 @@ function main() {
     .catch((e) => console.error("StarterBot", e));
 }
 
-// main();
+export { startWechatBot };
 
-SolMessage.handleSolanaMessage("5DQSDg6SGkbsbykq4mQstpcL4d5raEHc6rY7LgBwpump");
+// SolMessage.handleSolanaMessage('DLHNY1ViRpqvGy1GrusEt19YXyPqMSUSVpGiS557pump');

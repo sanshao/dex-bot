@@ -1,1 +1,8 @@
-console.log('Hello, TypeScript!');
+import "./args";
+import { startWechatBot } from "./dex/bot/wechat";
+
+function main() {
+  startWechatBot();
+}
+
+main();

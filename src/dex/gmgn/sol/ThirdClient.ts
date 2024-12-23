@@ -46,10 +46,10 @@ class ThirdClient {
         httpsAgent: new https.Agent({ rejectUnauthorized: false }), // 允许不安全的证书
       });
 
-      console.log(response.data); // 输出获取的结果
+      // console.log(response.data); // 输出获取的结果
       return response.data;
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching fetchHotList:", error);
     }
     // @ts-ignore
     return null;
