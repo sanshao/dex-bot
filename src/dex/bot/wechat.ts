@@ -4,6 +4,7 @@ import { WechatyBuilder, ScanStatus, Message, Contact } from "wechaty";
 import qrcodeTerminal from "qrcode-terminal";
 import SolMessage from "../gmgn/sol/SolMessage";
 import { args } from "../../args";
+import BotStorage from "../db/BotStorage";
 
 function onScan(qrcode: string, status: number) {
   if (status === ScanStatus.Waiting || status === ScanStatus.Timeout) {
@@ -41,7 +42,10 @@ async function onMessage(msg: Message) {
   }
   let text = msg.text();
   try {
-    let replyText = await SolMessage.handleSolanaMessage(text);
+    let { replyText, tokenInfo } = await SolMessage.handleSolanaMessage(text);
+    if (tokenInfo) {
+      BotStorage.addRecord({ ...tokenInfo, queryUser: msg.talker()?.name(), groupName: msg.room()?.topic() });
+    }
     if (replyText) {
       await msg.say(replyText);
     }
@@ -64,4 +68,4 @@ function startWechatBot(param = {} as any) {
 
 export { startWechatBot };
 
-// SolMessage.handleSolanaMessage('DLHNY1ViRpqvGy1GrusEt19YXyPqMSUSVpGiS557pump');
+SolMessage.handleSolanaMessage('DLHNY1ViRpqvGy1GrusEt19YXyPqMSUSVpGiS557pump');

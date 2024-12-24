@@ -4,9 +4,17 @@ import utc from "dayjs/plugin/utc.js";
 import timezone from "dayjs/plugin/timezone.js";
 import SolClient from "./SolClient";
 import ThirdClient from "./ThirdClient";
+import { TokenInfoModelFromPageProps } from "./model/SolModel";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+
+export type TokenFullInfoModel = TokenInfoModelFromPageProps & {
+  groupCount?: number;
+  queryCount?: number;
+  insider_percentage?: number;
+  launchpad_progress?: number;
+}
 
 class SolMessage {
   formatNumber = (value: string, decimals = 2) => {
@@ -43,14 +51,14 @@ class SolMessage {
     return solanaAddressRegex.test(address);
   };
 
-  getTokenTemplate = (tokenData: any) => {
+  getTokenTemplate = (tokenData: TokenFullInfoModel) => {
     let arr = [`🎗️币种: ${tokenData.symbol}(${tokenData.name})`];
     arr.push(
       `⏰创建时间: ${dayjs(tokenData.creation_timestamp * 1000)
         .tz("Asia/Shanghai")
         .format("YY-MM-DD HH:mm:ss")}`
     );
-  
+
     if (tokenData.open_timestamp > 0) {
       arr.push(
         `🕗发射时间: ${dayjs(tokenData.open_timestamp * 1000)
@@ -64,7 +72,7 @@ class SolMessage {
           .toFixed(2)}%`
       );
     }
-  
+
     arr.push(`💰价格: ${tokenData.price}`);
     arr.push(`💹市值: ${this.formatNumber(tokenData.market_cap)}`);
 
@@ -82,17 +90,19 @@ class SolMessage {
         tokenData.groupCount ? `(${tokenData.groupCount}个群)` : ""
       } ${tokenData.queryCount ? `(${tokenData.queryCount}次查询)` : ""}`
     );
-    arr.push(`👶Dev持仓量: ${this.formatNumber(tokenData.creator_token_balance)}`);
+    arr.push(
+      `👶Dev持仓量: ${this.formatNumber(tokenData.creator_token_balance)}`
+    );
     arr.push(
       `🐋Top10持仓: ${new BigNumber(tokenData.top_10_holder_rate)
         .times(100)
         .toFixed(2)}%`
     );
     arr.push(`💧池子: ${this.formatNumber(tokenData.liquidity)}`);
-  
+
     arr.push(`💵1H成交额: ${this.formatNumber(tokenData.volume_5m)} `);
     arr.push(`💸24H成交额: ${this.formatNumber(tokenData.volume_24h)} `);
-  
+
     // arr.push("\n");
     arr.push(
       `⌛️1M: ${this.raisePercentage(
@@ -106,15 +116,20 @@ class SolMessage {
         tokenData.price
       )}   24H: ${this.raisePercentage(tokenData.price_24h, tokenData.price)}`
     );
-  
+
     arr.push(
       `⌚️查询时间: ${dayjs().tz("Asia/Shanghai").format("YY-MM-DD HH:mm:ss")}`
     );
-  
+
     return arr.join("\n").replace(/\n\n/g, "\n");
   };
 
-  handleSolanaMessage = async (msg: string) => {
+  handleSolanaMessage = async (
+    msg: string
+  ): Promise<{
+    replyText?: string;
+    tokenInfo?: any;
+  }> => {
     console.log("获取gmgn数据", msg);
     if (this.isValidSolanaAddress(msg)) {
       // let data = await fetchDataByPuppeteer(msg);
@@ -124,7 +139,7 @@ class SolMessage {
         SolClient.getTokenHolderStatus(msg),
         SolClient.getTokenLauchpadInfo(msg),
       ]);
-  
+
       let tokenInfo: any = data1;
       if (tokenInfo && tokenInfo.symbol) {
         if (data2 && data2.data && data2.data.length) {
@@ -132,23 +147,22 @@ class SolMessage {
           tokenInfo.groupCount = hot["群数"] + 1;
           tokenInfo.queryCount = hot["次数"] + 1;
         }
-  
+
         if (data3 && data3.data && data3.data.insider_percentage) {
           tokenInfo.insider_percentage = data3.data.insider_percentage;
         }
-  
+
         if (data4 && data4.data && data4.data.launchpad_progress) {
           tokenInfo.launchpad_progress = data4.data.launchpad_progress;
         }
-  
+
         let str = this.getTokenTemplate(tokenInfo);
         console.log("===========");
         console.log(str);
-        return str;
+        return { replyText: str, tokenInfo: tokenInfo };
       }
     }
-    return null;
+    return {};
   };
-
 }
 export default new SolMessage();

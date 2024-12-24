@@ -11,32 +11,32 @@ datasource db {
 }
 
 model Token {
-  id Int @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   // 合约地址
-  ca String @unique
+  ca          String   @unique
   // 第1个查询人的名称
   firstCaller String
   // 查询次数
-  queryNum Int
+  queryNum    Int
   // 群数量
-  groupNum Int
+  groupNum    Int
   // 首次查询时价格
-  firstPrice String
-  firstFdv String
-  createAt DateTime
-  updateAt DateTime
+  firstPrice  String
+  firstFdv    String
+  createAt    DateTime @default(now())
+  updateAt    DateTime @updatedAt
 }
 
 model Record {
-  id Int @id @default(autoincrement())// 合约地址
-  ca String
+  id        Int      @id @default(autoincrement()) // 合约地址
+  ca        String
   // 查询人
   queryUser String
   // 查询来源群
   groupName String
-  price String
+  price     String
   // 查询时的市值
-  fdv String
-  createAt DateTime
-  updateAt DateTime
+  fdv       String
+  createAt  DateTime @default(now())
+  updateAt  DateTime @updatedAt
 }
