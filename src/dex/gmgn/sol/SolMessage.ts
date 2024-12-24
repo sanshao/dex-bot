@@ -126,10 +126,7 @@ class SolMessage {
 
   handleSolanaMessage = async (
     msg: string
-  ): Promise<{
-    replyText?: string;
-    tokenInfo?: any;
-  }> => {
+  ): Promise<TokenFullInfoModel | null> => {
     console.log("获取gmgn数据", msg);
     if (this.isValidSolanaAddress(msg)) {
       // let data = await fetchDataByPuppeteer(msg);
@@ -156,13 +153,13 @@ class SolMessage {
           tokenInfo.launchpad_progress = data4.data.launchpad_progress;
         }
 
-        let str = this.getTokenTemplate(tokenInfo);
-        console.log("===========");
-        console.log(str);
-        return { replyText: str, tokenInfo: tokenInfo };
+        // let str = this.getTokenTemplate(tokenInfo);
+        // console.log("===========");
+        // console.log(str);
+        return tokenInfo;
       }
     }
-    return {};
+    return null;
   };
 }
 export default new SolMessage();

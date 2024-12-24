@@ -42,12 +42,18 @@ async function onMessage(msg: Message) {
   }
   let text = msg.text();
   try {
-    let { replyText, tokenInfo } = await SolMessage.handleSolanaMessage(text);
+    let tokenInfo = await SolMessage.handleSolanaMessage(text);
     if (tokenInfo) {
-      BotStorage.addRecord({ ...tokenInfo, queryUser: msg.talker()?.name(), groupName: msg.room()?.topic() });
-    }
-    if (replyText) {
-      await msg.say(replyText);
+      let replyText = SolMessage.getTokenTemplate(tokenInfo);
+      if (replyText) {
+        msg.say(replyText);
+      }
+      let roomName = await msg.room()?.topic();
+      BotStorage.addRecord({
+        ...tokenInfo,
+        queryUser: msg.talker()?.name(),
+        groupName: roomName || "",
+      });
     }
   } catch (error) {
     console.log(error);
@@ -68,4 +74,4 @@ function startWechatBot(param = {} as any) {
 
 export { startWechatBot };
 
-SolMessage.handleSolanaMessage('DLHNY1ViRpqvGy1GrusEt19YXyPqMSUSVpGiS557pump');
+// SolMessage.handleSolanaMessage('DLHNY1ViRpqvGy1GrusEt19YXyPqMSUSVpGiS557pump');

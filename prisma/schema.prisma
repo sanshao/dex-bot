@@ -19,7 +19,7 @@ model Token {
   // 查询次数
   queryNum    Int
   // 群数量
-  groupNum    Int
+  roomNum    Int
   // 首次查询时价格
   firstPrice  String
   firstFdv    String
@@ -33,7 +33,7 @@ model Record {
   // 查询人
   queryUser String
   // 查询来源群
-  groupName String
+  roomName String
   price     String
   // 查询时的市值
   fdv       String
