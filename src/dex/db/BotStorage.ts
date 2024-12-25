@@ -4,20 +4,20 @@ import { TokenFullInfoModel } from "../gmgn/sol/SolMessage";
 
 export type TokenInfoStorageModel = TokenFullInfoModel & {
   queryUser: string;
-  groupName: string;
+  roomName: string;
 };
 
 class BotStorage {
   async addRecord(info: TokenInfoStorageModel) {
     try {
-      let { address, price, fdv, groupName = "", queryUser = "" } = info;
+      let { address, price, fdv, roomName = "", queryUser = "" } = info;
 
       let record = await prisma.record.create({
         data: {
           ca: address,
           price,
           fdv,
-          groupName,
+          roomName,
           queryUser,
         },
       });
@@ -26,8 +26,8 @@ class BotStorage {
           ca: address,
         },
         select: {
-          queryNum: true,
-          groupNum: true,
+          queryCount: true,
+          roomCount: true,
           firstCaller: true,
           firstPrice: true,
           firstFdv: true,
@@ -39,16 +39,16 @@ class BotStorage {
             ca: address,
           },
           data: {
-            queryNum: token.queryNum + 1,
-            groupNum: token.groupNum,
+            queryCount: token.queryCount + 1,
+            roomCount: token.roomCount,
           },
         });
       } else {
         await prisma.token.create({
           data: {
             ca: address,
-            queryNum: 1,
-            groupNum: 1,
+            queryCount: 1,
+            roomCount: 1,
             firstCaller: queryUser,
             firstPrice: price,
             firstFdv: fdv,

@@ -52,7 +52,7 @@ async function onMessage(msg: Message) {
       BotStorage.addRecord({
         ...tokenInfo,
         queryUser: msg.talker()?.name(),
-        groupName: roomName || "",
+        roomName: roomName || "",
       });
     }
   } catch (error) {
@@ -74,4 +74,4 @@ function startWechatBot(param = {} as any) {
 
 export { startWechatBot };
 
-// SolMessage.handleSolanaMessage('DLHNY1ViRpqvGy1GrusEt19YXyPqMSUSVpGiS557pump');
+SolMessage.handleSolanaMessage('DLHNY1ViRpqvGy1GrusEt19YXyPqMSUSVpGiS557pump');

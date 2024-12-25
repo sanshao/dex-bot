@@ -10,7 +10,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 export type TokenFullInfoModel = TokenInfoModelFromPageProps & {
-  groupCount?: number;
+  roomCount?: number;
   queryCount?: number;
   insider_percentage?: number;
   launchpad_progress?: number;
@@ -87,7 +87,7 @@ class SolMessage {
     );
     arr.push(
       `🔥热度等级: ${tokenData.hot_level || ""} ${
-        tokenData.groupCount ? `(${tokenData.groupCount}个群)` : ""
+        tokenData.roomCount ? `(${tokenData.roomCount}个群)` : ""
       } ${tokenData.queryCount ? `(${tokenData.queryCount}次查询)` : ""}`
     );
     arr.push(
@@ -141,7 +141,7 @@ class SolMessage {
       if (tokenInfo && tokenInfo.symbol) {
         if (data2 && data2.data && data2.data.length) {
           let hot = data2.data[0];
-          tokenInfo.groupCount = hot["群数"] + 1;
+          tokenInfo.roomCount = hot["群数"] + 1;
           tokenInfo.queryCount = hot["次数"] + 1;
         }
 
