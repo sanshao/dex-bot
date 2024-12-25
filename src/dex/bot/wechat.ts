@@ -73,5 +73,3 @@ function startWechatBot(param = {} as any) {
 }
 
 export { startWechatBot };
-
-SolMessage.handleSolanaMessage('DLHNY1ViRpqvGy1GrusEt19YXyPqMSUSVpGiS557pump');

@@ -4,7 +4,7 @@ import { TokenFullInfoModel } from "../gmgn/sol/SolMessage";
 
 export type TokenInfoStorageModel = TokenFullInfoModel & {
   queryUser: string;
-  roomName: string;
+  roomName?: string;
 };
 
 class BotStorage {
@@ -33,14 +33,32 @@ class BotStorage {
           firstFdv: true,
         },
       });
+
       if (token) {
+        let roomCount = 0;
+        if (roomName) {
+          let distinctRoomNames = await prisma.record.findMany({
+            where: {
+              ca: address,
+              roomName: {
+                not: "", // 排除空字符串
+              },
+            },
+            select: {
+              roomName: true,
+            },
+            distinct: ["roomName"],
+          });
+          roomCount = distinctRoomNames.length;
+        }
+
         await prisma.token.update({
           where: {
             ca: address,
           },
           data: {
             queryCount: token.queryCount + 1,
-            roomCount: token.roomCount,
+            ...(roomCount > 0 ? { roomCount: roomCount } : {}),
           },
         });
       } else {
