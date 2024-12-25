@@ -4,7 +4,8 @@ import utc from "dayjs/plugin/utc.js";
 import timezone from "dayjs/plugin/timezone.js";
 import SolClient from "./SolClient";
 import ThirdClient from "./ThirdClient";
-import { TokenInfoModelFromPageProps } from "./model/SolModel";
+import { KlineItemModel, TokenInfoModelFromPageProps } from "./model/SolModel";
+import BotStorage from "../../db/BotStorage";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -14,7 +15,11 @@ export type TokenFullInfoModel = TokenInfoModelFromPageProps & {
   queryCount?: number;
   insider_percentage?: number;
   launchpad_progress?: number;
-}
+  highestPrice?: string;
+  firstCaller?: string;
+  firstPrice?: string;
+  firstFdv?: string;
+};
 
 class SolMessage {
   formatNumber = (value: string, decimals = 2) => {
@@ -76,6 +81,30 @@ class SolMessage {
     arr.push(`💰价格: ${tokenData.price}`);
     arr.push(`💹市值: ${this.formatNumber(tokenData.market_cap)}`);
 
+    if(tokenData.firstCaller) {
+      arr.push(`🏅哨兵：${tokenData.firstCaller}`);
+    }
+    if (tokenData.firstPrice) {
+      let currTimes = new BigNumber(tokenData.price).dividedBy(
+        tokenData.firstPrice
+      );
+      if (currTimes.isGreaterThan(1)) {
+        arr.push(`🔥当前倍数: ${currTimes.toFormat(2)}X`);
+      }
+
+      if (tokenData.highestPrice && tokenData.firstPrice) {
+        let maxTimes = new BigNumber(tokenData.highestPrice).dividedBy(
+          tokenData.firstPrice
+        );
+        if (maxTimes.isGreaterThan(1)) {
+          arr.push(`🚀最大倍数: ${maxTimes.toFormat(2)}X`);
+        }
+      }
+    }
+
+    // arr.push(`📈Call：${this.formatNumber(tokenData.biggest_pool_address)}`);
+
+
     arr.push(
       `👥持有人: ${tokenData.holder_count} ${
         tokenData.insider_percentage
@@ -124,17 +153,29 @@ class SolMessage {
     return arr.join("\n").replace(/\n\n/g, "\n");
   };
 
+  getHighestPrice = (data: KlineItemModel[]) => {
+    return data.reduce((prev, current) => {
+      return prev.high > current.high ? prev : current;
+    });
+  };
+
   handleSolanaMessage = async (
     msg: string
   ): Promise<TokenFullInfoModel | null> => {
     console.log("获取gmgn数据", msg);
     if (this.isValidSolanaAddress(msg)) {
       // let data = await fetchDataByPuppeteer(msg);
-      let [data1, data2, data3, data4] = await Promise.all([
+      let [data1, data2, data3, data4, data5, data6] = await Promise.all([
         SolClient.getTokenInfoByPage(msg),
         ThirdClient.fetchHotList(msg),
         SolClient.getTokenHolderStatus(msg),
         SolClient.getTokenLauchpadInfo(msg),
+        SolClient.getTokenKlineList(msg, {
+          resolution: "1d",
+          from: 1706659200,
+          to: dayjs().add(1, "d").unix(),
+        }),
+        BotStorage.getTokenAnlysis(msg),
       ]);
 
       let tokenInfo: any = data1;
@@ -151,6 +192,19 @@ class SolMessage {
 
         if (data4 && data4.data && data4.data.launchpad_progress) {
           tokenInfo.launchpad_progress = data4.data.launchpad_progress;
+        }
+
+        if (data5 && data5.data && data5.data.list) {
+          let highestPrice = this.getHighestPrice(data5.data.list);
+          tokenInfo.highestPrice = highestPrice.high;
+        }
+
+        if (data6 && data6.ca) {
+          tokenInfo.roomCount += data6.roomCount;
+          tokenInfo.queryCount += data6.queryCount;
+          tokenInfo.firstCaller = data6.firstCaller;
+          tokenInfo.firstPrice = data6.firstPrice;
+          tokenInfo.firstFdv = data6.firstFdv;
         }
 
         // let str = this.getTokenTemplate(tokenInfo);

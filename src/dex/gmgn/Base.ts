@@ -7,6 +7,15 @@ export interface GmgnBaseModel<T> {
   data: T;
 }
 
+export interface GmgnBaseListModel<T> {
+  code: number;
+  reason: string;
+  message: string;
+  data: {
+    list: T;
+  };
+}
+
 const AxiosInstance = axios.create({
   baseURL: "https://gmgn.ai",
   timeout: 10000,

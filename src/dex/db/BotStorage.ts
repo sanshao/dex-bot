@@ -75,6 +75,22 @@ class BotStorage {
       }
     } catch (error) {}
   }
+
+  getTokenAnlysis(ca: string) {
+    return prisma.token.findUnique({
+      where: {
+        ca,
+      },
+      select: {
+        ca: true,
+        queryCount: true,
+        roomCount: true,
+        firstCaller: true,
+        firstPrice: true,
+        firstFdv: true,
+      },
+    });
+  }
 }
 
 export default new BotStorage();

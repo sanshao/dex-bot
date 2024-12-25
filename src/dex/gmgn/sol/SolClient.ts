@@ -1,5 +1,6 @@
 import axios from "axios";
 import {
+  KlineItemModel,
   TokenDevInfoModel,
   TokenHolderStatModel,
   TokenInfoModel,
@@ -10,7 +11,7 @@ import {
   TokenRugInfoModel,
   TokenSecurityInfoModel,
 } from "./model/SolModel";
-import { AxiosInstance, GmgnBaseModel } from "../Base";
+import { AxiosInstance, GmgnBaseListModel, GmgnBaseModel } from "../Base";
 
 class SolClient {
   async getTokenInfoByPage(
@@ -89,6 +90,17 @@ class SolClient {
     ca: string
   ): Promise<GmgnBaseModel<TokenHolderStatModel>> {
     return AxiosInstance.get(`/api/v1/token_holder_stat/sol/${ca}`);
+  }
+
+  getTokenKlineList(
+    ca: string,
+    param: {
+      resolution: string;
+      from: number;
+      to: number;
+    }
+  ): Promise<GmgnBaseListModel<KlineItemModel[]>> {
+    return AxiosInstance.get(`/api/v1/token_kline/sol/${ca}`, { params: param });
   }
 }
 

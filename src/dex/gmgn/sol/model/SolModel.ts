@@ -178,3 +178,13 @@ export interface TokenInfoModelFromPageProps {
   circulating_market_cap: string;
   fdv: string;
 }
+
+
+export interface KlineItemModel {
+  open: string;
+  close: string;
+  high: string;
+  low: string;
+  time: string;
+  volume: string;
+}
