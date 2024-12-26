@@ -89,7 +89,7 @@ class SolMessage {
         tokenData.firstPrice
       );
       if (currTimes.isGreaterThan(1)) {
-        arr.push(`🔥当前倍数: ${currTimes.toFormat(2)}X`);
+        arr.push(`🤑当前倍数: ${currTimes.toFormat(2)}X`);
       }
 
       if (tokenData.highestPrice && tokenData.firstPrice) {
