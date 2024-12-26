@@ -161,7 +161,7 @@ class SolMessage {
   };
 
   handleSolanaMessage = async (
-    msg: string
+    msg: string, talkerName?: string
   ): Promise<TokenFullInfoModel | null> => {
     console.log("获取gmgn数据", msg);
     if (this.isValidSolanaAddress(msg)) {
@@ -201,11 +201,12 @@ class SolMessage {
         }
 
         if (data6 && data6.ca) {
-          tokenInfo.roomCount = tokenInfo.roomCount || 1;
+          tokenInfo.roomCount = tokenInfo.roomCount || 0;
           tokenInfo.queryCount = tokenInfo.queryCount || 1;
           tokenInfo.roomCount += data6.roomCount;
+          tokenInfo.roomCount = tokenInfo.roomCount || 1; // 最小设置为1个群
           tokenInfo.queryCount += data6.queryCount;
-          tokenInfo.firstCaller = data6.firstCaller;
+          tokenInfo.firstCaller = data6.firstCaller || talkerName;
           tokenInfo.firstPrice = data6.firstPrice;
           tokenInfo.firstFdv = data6.firstFdv;
         }

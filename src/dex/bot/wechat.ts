@@ -42,7 +42,8 @@ async function onMessage(msg: Message) {
   }
   let text = msg.text();
   try {
-    let tokenInfo = await SolMessage.handleSolanaMessage(text);
+    const talkerName = msg.talker()?.name();
+    let tokenInfo = await SolMessage.handleSolanaMessage(text, talkerName);
     if (tokenInfo) {
       let replyText = SolMessage.getTokenTemplate(tokenInfo);
       if (replyText) {
