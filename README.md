@@ -16,7 +16,7 @@ npm install pm2 -g
 
 ### 4. 启动命令
 ```
-pm2 start npm --name bot1 -- run start -- -wx wx-account-name
+pm2 start npm --name bot1 -- run start -- -wx wx-account1
 ```
 参数 --name 后面跟要启动的项目名字 bot1 bot2... 
 
