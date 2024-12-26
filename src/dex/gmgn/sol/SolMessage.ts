@@ -201,6 +201,8 @@ class SolMessage {
         }
 
         if (data6 && data6.ca) {
+          tokenInfo.roomCount = tokenInfo.roomCount || 1;
+          tokenInfo.queryCount = tokenInfo.queryCount || 1;
           tokenInfo.roomCount += data6.roomCount;
           tokenInfo.queryCount += data6.queryCount;
           tokenInfo.firstCaller = data6.firstCaller;
