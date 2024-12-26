@@ -19,8 +19,8 @@ class SolClient {
   ): Promise<GmgnBaseModel<TokenInfoModelFromPageProps> | null> {
     const url = `https://gmgn.ai/sol/token/${ca}`;
     // 启动浏览器
-    // const response = await axios.get(url);
-    const response = await AxiosInstance.get(url);
+    const response = await axios.get(url);
+    // const response = await AxiosInstance.get(url);
     const html = response.data;
 
     try {
