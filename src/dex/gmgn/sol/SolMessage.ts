@@ -96,6 +96,8 @@ class SolMessage {
         let maxTimes = new BigNumber(tokenData.highestPrice).dividedBy(
           tokenData.firstPrice
         );
+        // 价格变化较快 有可能历史价先返回结果 导致 当前倍数大于历史倍数 取最大
+        maxTimes = BigNumber.max(maxTimes, currTimes);
         if (maxTimes.isGreaterThan(1)) {
           arr.push(`🚀最大倍数: ${maxTimes.toFormat(2)}X`);
         }
