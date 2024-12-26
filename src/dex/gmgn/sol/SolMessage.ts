@@ -81,7 +81,7 @@ class SolMessage {
     arr.push(`💰价格: ${tokenData.price}`);
     arr.push(`💹市值: ${this.formatNumber(tokenData.market_cap)}`);
 
-    if(tokenData.firstCaller) {
+    if (tokenData.firstCaller) {
       arr.push(`🏅哨兵：${tokenData.firstCaller}`);
     }
     if (tokenData.firstPrice) {
@@ -99,11 +99,12 @@ class SolMessage {
         if (maxTimes.isGreaterThan(1)) {
           arr.push(`🚀最大倍数: ${maxTimes.toFormat(2)}X`);
         }
+        if (tokenData.firstFdv) {
+          let maxFdv = maxTimes.multipliedBy(tokenData.firstFdv).toFixed();
+          arr.push(`📈Call：${this.formatNumber(tokenData.firstFdv)} >> ${this.formatNumber(maxFdv)}`);
+        }
       }
     }
-
-    // arr.push(`📈Call：${this.formatNumber(tokenData.biggest_pool_address)}`);
-
 
     arr.push(
       `👥持有人: ${tokenData.holder_count} ${
