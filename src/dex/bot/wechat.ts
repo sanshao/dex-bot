@@ -63,7 +63,7 @@ async function onMessage(msg: Message) {
 
 function startWechatBot(param = {} as any) {
   const wechaty = WechatyBuilder.build({
-    name: "wechat-dex-bot",
+    name: args.weixin || "wechat-dex-bot",
   }); // get a Wechaty instance
   wechaty.on("scan", onScan).on("login", onLogin).on("message", onMessage);
 
