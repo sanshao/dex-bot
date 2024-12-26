@@ -209,6 +209,10 @@ class SolMessage {
           tokenInfo.firstCaller = data6.firstCaller || talkerName;
           tokenInfo.firstPrice = data6.firstPrice;
           tokenInfo.firstFdv = data6.firstFdv;
+        } else {
+          tokenInfo.firstCaller = talkerName;
+          tokenInfo.queryCount = 1;
+          tokenInfo.roomCount = 1;
         }
 
         // let str = this.getTokenTemplate(tokenInfo);
