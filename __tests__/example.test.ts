@@ -1,6 +1,7 @@
 // __tests__/example.test.ts
 
 import BotStorage from "../src/dex/db/BotStorage";
+import SolClient from "../src/dex/gmgn/sol/SolClient";
 
 const sum = (a: number, b: number): number => a + b;
 
@@ -87,14 +88,21 @@ const tokenInfo = {
   "fdv": "6489.9617545729657"
 }
 
-describe('db add record', () => {
-  it('should add record', async () => {
-    BotStorage.addRecord({
-      ...tokenInfo,
-      queryUser: "test test4",
-      // roomName: "test room3",
-      // queryCount: 1,
-      // roomCount: 1
-    })
+// describe('db add record', () => {
+//   it('should add record', async () => {
+//     BotStorage.addRecord({
+//       ...tokenInfo,
+//       queryUser: "test test4",
+//       // roomName: "test room3",
+//       // queryCount: 1,
+//       // roomCount: 1
+//     })
+//   })
+// })
+
+describe('db get token anlysis', () => {
+  it('should get token anlysis', async () => {
+    // let res = await SolClient.getTokenInfoByPage(tokenInfo.address)
+    // console.log('res', res)
   })
 })
