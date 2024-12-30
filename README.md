@@ -19,18 +19,12 @@ npm install pm2 -g
 ```
 DATABASE_URL="database connet url"
 ```
-首次启动前需要初始化数据库
-```
-npx prisma migrate dev --name init # 初始化数据库
-npx prisma db push # 首次启动前需要初始化数据库
-```
 
 ### 安装依赖项
 ```
 npx prisma generate # 生成prisma文件
 npm install 
 ```
-
 
 ### 启动命令
 ```
@@ -63,3 +57,9 @@ cat output.log # 查看日志
 
 ### 查看日志文件登录微信
 以上查看日志的方式, 会看到二维码, 扫码登录.
+
+### 开发阶段需要初始化数据库 使用阶段不用
+```
+npx prisma migrate dev --name init # 初始化数据库
+npx prisma db push # 首次启动前需要初始化数据库
+```
