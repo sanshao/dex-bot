@@ -17,7 +17,7 @@ npm install pm2 -g
 ### 数据库配置
 根目录下新建.env文件 以下是文件内容
 ```
-DATABASE_URL="file:./dev.db"
+DATABASE_URL="database connet url"
 ```
 首次启动前需要初始化数据库
 ```
@@ -25,6 +25,12 @@ npx prisma migrate dev --name init # 初始化数据库
 npx prisma generate # 生成prisma文件
 npx prisma db push # 首次启动前需要初始化数据库
 ```
+
+### 安装依赖项
+```
+npm install 
+```
+
 
 ### 启动命令
 ```
