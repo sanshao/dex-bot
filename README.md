@@ -22,12 +22,12 @@ DATABASE_URL="database connet url"
 首次启动前需要初始化数据库
 ```
 npx prisma migrate dev --name init # 初始化数据库
-npx prisma generate # 生成prisma文件
 npx prisma db push # 首次启动前需要初始化数据库
 ```
 
 ### 安装依赖项
 ```
+npx prisma generate # 生成prisma文件
 npm install 
 ```
 
